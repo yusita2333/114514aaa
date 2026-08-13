@@ -1,0 +1,66 @@
+/* ============================================================
+ * 九条会 新 UI 设计系统（极道手账 · 木纹② 粗犷大纹）
+ * 视觉真相源: docs/ui-mockups/变体B-木纹方案2.html
+ * 改配色/字体/木纹只动本文件的 :root 与 wood 变量。
+ * 字体: zeoseven CDN（云峰飞云体 446 / 京华老宋体 309）。
+ *
+ * ⚠️作用域: 全屏时本 app 的 DOM 会被提到酒馆【顶层窗口】显示（见 index.ts），
+ *   届时本文件的 <style> 会被克隆进顶层 <head>。所以**绝不能**写裸 `*` / `body` / `#app`
+ *   全局规则（会污染酒馆本体）——所有全局样式一律收敛到 `.pellucid-root` 作用域。
+ *   :root 变量是无害的（只定义 CSS 变量），可保留全局。
+ * ============================================================ */
+
+/* 字体 CDN（外部 @import 由 css-loader 原样保留在产物顶部） */
+@import url("https://fontsapi.zeoseven.com/446/main/result.css"); /* 云峰飞云体 YFFYT · 毛笔水墨 标题 */
+@import url("https://fontsapi.zeoseven.com/309/main/result.css"); /* 京华老宋体 KingHwaOldSong · 正体 正文 */
+
+:root {
+  /* —— 配色：黑金为主 + 红装饰 + 白文字 —— */
+  --ink: #0a0706; --panel: #141010; --panel-2: #1c1614;
+  --gold: #c9a24a; --gold-hi: #ecc878; --gold-dim: #7d6228;
+  --red: #b3212e; --red-hi: #d8404d;
+  /* —— 绯红：比正红偏粉一点，用于淫名/堕落度/秘密状态（淫乱风味）—— */
+  --rose: #d24a6a; --rose-hi: #f06a8a;
+  --text: #efe6da; --text-dim: #a99c8d; --green: #9cba7e;
+  --line: rgba(201, 162, 74, .28);
+  /* —— 字体 —— */
+  --brush: "YFFYT", "KingHwaOldSong", serif;
+  --serif: "KingHwaOldSong", "Songti SC", serif;
+  /* —— 木纹：方案② 粗犷大纹（无打光）—— */
+  --wood-base: #15100b;
+  --wood-h:
+    linear-gradient(180deg, rgba(0,0,0,.16), rgba(0,0,0,.44)),
+    repeating-linear-gradient(90deg,
+      #181109 0px,#251a0e 6px,#120c07 13px,#221708 20px,#0f0a06 27px,#27190c 34px);
+  --wood-v:
+    linear-gradient(90deg, rgba(0,0,0,.16), rgba(0,0,0,.46)),
+    repeating-linear-gradient(1.5deg,
+      #181109 0px,#251a0e 7px,#120c07 15px,#221708 23px,#0f0a06 31px,#27190c 39px);
+}
+
+/* 作用域根（App 的 .app 同时带 .pellucid-root）。全局重置/底色只在此根内生效。 */
+.pellucid-root, .pellucid-root * { box-sizing: border-box; margin: 0; padding: 0; }
+.pellucid-root {
+  color: var(--text);
+  font-family: var(--serif); -webkit-font-smoothing: antialiased;
+  min-height: 100vh; position: relative;
+  /* 底色 + 极道纹样底纹（青海波·低调·直接做背景，避免 ::before 的层叠问题） */
+  background-color: var(--ink);
+  background-image:
+    radial-gradient(circle at 50% 100%, transparent 9px, rgba(201,162,74,.04) 10px 11px, transparent 12px),
+    radial-gradient(circle at 0% 100%,  transparent 9px, rgba(201,162,74,.04) 10px 11px, transparent 12px),
+    radial-gradient(circle at 100% 100%,transparent 9px, rgba(201,162,74,.04) 10px 11px, transparent 12px);
+  background-size: 40px 20px;
+}
+/* 融合式滚动条（仅本根内） */
+.pellucid-root *, .pellucid-root { scrollbar-width: thin; scrollbar-color: rgba(201,162,74,.22) transparent; }
+.pellucid-root *::-webkit-scrollbar { width: 7px; height: 7px; }
+.pellucid-root *::-webkit-scrollbar-track { background: transparent; }
+.pellucid-root *::-webkit-scrollbar-thumb { background: rgba(201,162,74,.16); border-radius: 8px; }
+.pellucid-root *::-webkit-scrollbar-thumb:hover { background: rgba(201,162,74,.34); }
+
+/* ═══ 批H3·手机适配(全局层·窄屏≤820px) ═══
+   overlay类组件(教程/教学关/结局/生成遮罩)竖屏统一收边距;正文字号微降。 */
+@media (max-width: 820px) {
+  .pellucid-root { font-size: 14px; }
+}

@@ -1,0 +1,569 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "时间": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "天数": {
+          "default": 1,
+          "type": "number"
+        },
+        "周数": {
+          "default": 1,
+          "type": "number"
+        },
+        "时段": {
+          "default": "分配",
+          "type": "string",
+          "enum": [
+            "分配",
+            "白天",
+            "夜晚"
+          ]
+        },
+        "每日总行动格": {
+          "default": 8,
+          "type": "number"
+        },
+        "每格供奉吞吐": {
+          "default": 6,
+          "type": "number"
+        },
+        "白天分配格": {
+          "default": 0,
+          "type": "number"
+        },
+        "白天已用": {
+          "default": 0,
+          "type": "number"
+        },
+        "夜晚分配格": {
+          "default": 0,
+          "type": "number"
+        },
+        "夜晚已用": {
+          "default": 0,
+          "type": "number"
+        },
+        "当前行动格序号": {
+          "default": 0,
+          "type": "number"
+        }
+      }
+    },
+    "当前处境": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "地点": {
+          "default": "九条邸",
+          "type": "string"
+        },
+        "当前状态": {
+          "default": "日常",
+          "type": "string"
+        },
+        "单场在场打手人数": {
+          "default": 0,
+          "type": "number"
+        }
+      }
+    },
+    "九条凛": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "堕落度": {
+          "default": 0,
+          "type": "number"
+        },
+        "认知防线": {
+          "default": "死撑",
+          "type": "string",
+          "enum": [
+            "死撑",
+            "动摇",
+            "崩溃",
+            "母猪化"
+          ]
+        },
+        "身体开发度": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "小穴": {
+              "default": "被迫接受",
+              "$ref": "#/$defs/__schema0"
+            },
+            "肛门": {
+              "default": "被迫接受",
+              "$ref": "#/$defs/__schema0"
+            },
+            "口腔": {
+              "default": "被迫接受",
+              "$ref": "#/$defs/__schema0"
+            },
+            "子宫生育": {
+              "default": "抗拒",
+              "$ref": "#/$defs/__schema0"
+            }
+          }
+        },
+        "特殊性癖觉醒度": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "排泄物接受度": {
+              "default": "抗拒",
+              "$ref": "#/$defs/__schema0"
+            },
+            "露出羞耻": {
+              "default": "被迫接受",
+              "$ref": "#/$defs/__schema0"
+            },
+            "受虐癖": {
+              "default": "抗拒",
+              "$ref": "#/$defs/__schema0"
+            }
+          }
+        },
+        "肉体状态": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "小穴插入次数": {
+              "default": 0,
+              "type": "number"
+            },
+            "小穴内射次数": {
+              "default": 0,
+              "type": "number"
+            },
+            "小穴高潮次数": {
+              "default": 0,
+              "type": "number"
+            },
+            "肛门插入次数": {
+              "default": 0,
+              "type": "number"
+            },
+            "肛门内射次数": {
+              "default": 0,
+              "type": "number"
+            },
+            "肛门高潮次数": {
+              "default": 0,
+              "type": "number"
+            },
+            "口腔插入次数": {
+              "default": 0,
+              "type": "number"
+            },
+            "口腔吞精次数": {
+              "default": 0,
+              "type": "number"
+            },
+            "子宫插入次数": {
+              "default": 0,
+              "type": "number"
+            },
+            "子宫内射次数": {
+              "default": 0,
+              "type": "number"
+            },
+            "子宫高潮次数": {
+              "default": 0,
+              "type": "number"
+            }
+          }
+        },
+        "怀孕周数": {
+          "default": 0,
+          "type": "number"
+        },
+        "生育记录": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "description": "记录键如\"记录01\""
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "时间": {
+                "default": "未知",
+                "type": "string"
+              },
+              "结果": {
+                "default": "未知",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "经期": {
+          "default": "安全期",
+          "type": "string",
+          "enum": [
+            "安全期",
+            "危险期"
+          ]
+        }
+      }
+    },
+    "九条会": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "势力阶段": {
+          "default": "苟延残喘",
+          "type": "string",
+          "enum": [
+            "苟延残喘",
+            "站稳脚跟",
+            "一方势力",
+            "极道豪强",
+            "复仇终焉"
+          ]
+        },
+        "资金": {
+          "default": 8000,
+          "type": "number"
+        },
+        "威望": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "极道威望": {
+              "default": 10,
+              "type": "number"
+            },
+            "淫名": {
+              "default": 5,
+              "type": "number"
+            }
+          }
+        },
+        "打手总数": {
+          "default": 30,
+          "type": "number"
+        },
+        "驻守占用打手": {
+          "default": 0,
+          "type": "number"
+        },
+        "_可用打手": {
+          "default": 0,
+          "type": "number"
+        },
+        "_武力": {
+          "default": 0,
+          "type": "number"
+        },
+        "打手忠诚度": {
+          "default": 60,
+          "type": "number"
+        },
+        "打手欲望值": {
+          "default": 0,
+          "type": "number"
+        },
+        "_欲望承载上限": {
+          "default": 60,
+          "type": "number"
+        },
+        "连续未供奉记录": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "description": "打手批次标识"
+          },
+          "additionalProperties": {
+            "default": 0,
+            "type": "number"
+          }
+        },
+        "招募": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "本周额度": {
+              "default": 0,
+              "type": "number"
+            },
+            "本周已用": {
+              "default": 0,
+              "type": "number"
+            }
+          }
+        },
+        "打手升级": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "enum": [
+              "兵器装备",
+              "格斗训练",
+              "精力强化",
+              "体型改造",
+              "调教器具"
+            ]
+          },
+          "additionalProperties": {
+            "default": 0,
+            "type": "number"
+          }
+        }
+      }
+    },
+    "大宅环境": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "避孕套库存": {
+          "default": 480,
+          "type": "number"
+        },
+        "_避孕套单次采购上限": {
+          "default": 0,
+          "type": "number"
+        },
+        "占据规模": {
+          "default": "老宅一隅",
+          "type": "string",
+          "enum": [
+            "老宅一隅",
+            "整座九条邸",
+            "邻近街区",
+            "盘踞一山",
+            "坐拥整片城区",
+            "小半座城"
+          ]
+        },
+        "暗网AV": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "总销量": {
+              "default": 0,
+              "type": "number"
+            },
+            "单部最高销量": {
+              "default": 0,
+              "type": "number"
+            }
+          }
+        },
+        "设施升级": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "enum": [
+              "行动格扩容",
+              "欲望承载上限",
+              "采购扩容",
+              "据点加固",
+              "地下室设施"
+            ]
+          },
+          "additionalProperties": {
+            "default": 0,
+            "type": "number"
+          }
+        }
+      }
+    },
+    "地盘": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "控制据点数": {
+          "default": 0,
+          "type": "number"
+        },
+        "控制店铺数": {
+          "default": 3,
+          "type": "number"
+        },
+        "地盘稳定系数": {
+          "default": 100,
+          "type": "number"
+        },
+        "最近威胁": {
+          "default": "暂无",
+          "type": "string"
+        },
+        "已解锁区域": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "description": "区域名"
+          },
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "复仇": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "当前阶段目标": {
+          "default": "街区的三流小势力",
+          "type": "string"
+        },
+        "目标进度": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "description": "目标/区域boss名"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "击败门槛": {
+                "default": 100,
+                "type": "number"
+              },
+              "门槛已削减": {
+                "default": 0,
+                "type": "number"
+              },
+              "是否击败": {
+                "default": false,
+                "type": "boolean"
+              },
+              "关联区域": {
+                "default": "",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "旁系清算": {
+          "default": false,
+          "type": "boolean"
+        }
+      }
+    },
+    "奇观": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "单场最高在场人数": {
+          "default": 0,
+          "type": "number"
+        },
+        "单场最长连续时长小时": {
+          "default": 0,
+          "type": "number"
+        },
+        "单洞最大插入直径cm": {
+          "default": 0,
+          "type": "number"
+        }
+      }
+    },
+    "解锁与结局": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "已解锁服装": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "description": "服装名"
+          },
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        },
+        "已解锁性玩具": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "description": "玩具名"
+          },
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        },
+        "已解锁地点": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "description": "地点名"
+          },
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        },
+        "已解锁常识背离场景": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "description": "场景名"
+          },
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        },
+        "已触发特殊事件": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "description": "特殊事件名"
+          },
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        },
+        "已领取奖励闸门": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "description": "奖励闸门名"
+          },
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        },
+        "学籍状态": {
+          "default": "在籍",
+          "type": "string"
+        },
+        "_结局倾向": {
+          "default": "未定",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "enum": [
+        "抗拒",
+        "被迫接受",
+        "无意识迎合",
+        "轻度上瘾",
+        "重度依赖"
+      ]
+    }
+  }
+}

@@ -1,0 +1,164 @@
+# 部署与发版指南
+
+> pellucid-grove 部署到 GitHub Pages + jsdelivr CDN,被酒馆角色卡(jiutiao)的状态栏正则 iframe 加载。
+
+## 一次性初始化(你需要做)
+
+### 1. 在 GitHub 上建仓库
+
+1. 登录 GitHub,新建仓库:
+   - 名字: `pellucid-grove`
+   - 可见性: **Public**(jsdelivr 只能拉公开仓库)
+   - 不要勾"Initialize with README"等任何选项(空仓库)
+
+2. 把本地仓库 push 上去:
+   ```
+   cd D:/application/tavern-projects/jiutiao-frontend
+   git remote add origin https://github.com/<你的用户名>/pellucid-grove.git
+   git branch -M master  # 或 main,看 GitHub 默认
+   git push -u origin master
+   ```
+
+### 2. 开启 GitHub Pages
+
+仓库 → Settings → Pages:
+- Source: **Deploy from a branch**
+- Branch: **gh-pages** / (root)
+- Save
+
+(GitHub Actions 首次跑完后才会出现 gh-pages 分支。先 push 上去触发一次,等 Actions 跑完再来这里勾选。)
+
+### 3. 改卡里的 iframe URL
+
+打开 `jiutiao/正则/状态栏界面.html`,把 `PLACEHOLDER_USER` 替换成你的 GitHub 用户名:
+
+```diff
+- src="https://cdn.jsdelivr.net/gh/PLACEHOLDER_USER/pellucid-grove@gh-pages/index.html"
++ src="https://cdn.jsdelivr.net/gh/你的用户名/pellucid-grove@gh-pages/index.html"
+```
+
+或锁版本(推荐发布给玩家时用·用 gh-pages 分支的 commit sha,不是 master 的 tag):
+```
+src="https://cdn.jsdelivr.net/gh/你的用户名/pellucid-grove@<sha7>/index.html"
+```
+> 取 sha 方法: `git fetch origin gh-pages && git rev-parse origin/gh-pages` 取前 7 位。
+> 注意: tag 打在 master 分支,但实际 dist 内容只在 gh-pages 分支。所以版本锁定必须用 sha,不能用 @vX.Y.Z。
+
+## 日常开发(本地)
+
+```
+cd D:/application/tavern-projects/jiutiao-frontend
+pnpm dev   # localhost:5173 热更新,自动走 mock 桥
+```
+
+修改后 push:
+
+```
+git add . && git commit -m "..."
+git push   # 自动触发 GitHub Actions 部署
+```
+
+5-10 分钟后 gh-pages 分支更新,jsdelivr 同步,玩家刷酒馆即可看到。
+
+## 发新版(打 tag,锁定给玩家的版本)
+
+```
+pnpm publish:tag patch   # 0.1.0 → 0.1.1 (小修)
+pnpm publish:tag minor   # 0.1.x → 0.2.0 (新功能)
+pnpm publish:tag major   # 0.x.x → 1.0.0 (破坏性)
+```
+
+脚本自动:
+1. 跑测试 + 构建校验
+2. 凸版本号(package.json)
+3. git commit + tag v<ver>
+4. git push --follow-tags 触发 Actions
+5. 打印新 jsdelivr URL 给你
+
+发版后:
+- 打开 `jiutiao/正则/状态栏界面.html`,把 iframe src 里的 `@vX.Y.Z` 改成新 tag
+- 重新打包卡: `node scripts/tavern-cards-forge.mjs pack jiutiao`
+- 把新卡发给玩家
+
+## 回滚
+
+### 情况 A: 新版有 bug,要紧急退回
+
+最快: 改卡里的 iframe URL 回旧 sha(部署过的每个 commit 都能在 jsdelivr 永久取回):
+```
+@<bad-sha7> → @<good-sha7>
+```
+保存,玩家清浏览器缓存即可看到旧版(jsdelivr 旧 commit 永久保留)。
+
+### 情况 B: 想完全删掉新 commit
+
+```
+git revert <bad-commit-sha>
+git push
+```
+约 5 分钟后 gh-pages 分支更新到 revert 后的状态。
+
+## 玩家看到旧版怎么办
+
+jsdelivr 默认缓存 12h。两个解决方案:
+
+### 方案 1: 强制 purge(临时)
+```
+curl https://purge.jsdelivr.net/gh/你的用户名/pellucid-grove@gh-pages/index.html
+```
+5 秒内全球 CDN 刷新。
+
+### 方案 2: 用 @latest 但加 ?v=时间戳
+卡里 iframe src 改:
+```
+src="...@latest/index.html?v=20260626"
+```
+每次发版改 `?v=` 后的字符串即可绕过缓存。
+
+### 方案 3(推荐): @vX.Y.Z 锁版本
+玩家拿到一张 v0.1.3 的卡 → 永远看 v0.1.3,跟 CDN 缓存无关。新版只通过"发新卡"召回玩家。
+
+## CDN URL 速查表
+
+| 用途 | URL 形式 |
+|------|---------|
+| 锁定版本(推荐给玩家·gh-pages 分支 commit sha) | `https://cdn.jsdelivr.net/gh/<user>/pellucid-grove@<sha7>/index.html` |
+| 跟随主分支(开发用) | `https://cdn.jsdelivr.net/gh/<user>/pellucid-grove@gh-pages/index.html` |
+| 强制刷新缓存 | `https://purge.jsdelivr.net/gh/<user>/pellucid-grove@gh-pages/index.html` |
+| GitHub Pages 直链(备用) | `https://<user>.github.io/pellucid-grove/` |
+
+## 故障排查
+
+### "iframe 加载白屏"
+1. 浏览器 F12 → Console 看错误
+2. 确认 GitHub Actions 跑成功(仓库 → Actions)
+3. 确认 gh-pages 分支存在且有内容(仓库 → Branches → gh-pages)
+4. 直接访问 jsdelivr URL,看是否返回 200
+
+### "Actions 跑失败"
+1. 仓库 → Actions → 点失败的 run → 看红色步骤
+2. 常见: `pnpm install --frozen-lockfile` 失败 → 本地跑 `pnpm install` 后 commit `pnpm-lock.yaml`
+3. 测试失败 → 先在本地 `pnpm vitest run src/game` 修绿再 push
+
+### "iframe 加载了但 React 不响应酒馆"
+1. F12 → Console 看是否有 `[mock-bridge]` 标记 → 说明没检测到 iframe 环境
+2. 检查 iframe 是否被 sandbox 屏蔽 → 状态栏正则 html 里确认有 `sandbox="allow-scripts allow-same-origin"`
+3. 检查酒馆主页 console 是否有 `[pellucid]` 前缀的日志
+
+### "AI 调用没响应"
+M5 阶段的 LLM 适配器只是 stub(尝试 generateQuietPrompt / TavernHelper.generateRaw)。
+若你的酒馆版本没暴露这些函数:
+1. 在 console 输入 `Object.keys(window)` 找可用 generate 函数名
+2. 改 `jiutiao/正则/状态栏界面.html` 里的 `callLlm` 函数适配
+3. 重新 pack 卡
+
+## 卡里需要重新打包的场景
+
+| 改动 | 需要重新 pack? |
+|------|--------------|
+| pellucid-grove 代码改 | 否(走 jsdelivr CDN,push 后自动更新) |
+| iframe src URL 改(换 tag) | 是 |
+| schema.ts 改(MVU 字段) | 是(还要 validate-mvu) |
+| 世界书条目内容改 | 是 |
+| initvar.yaml 改 | 是 |
+| 状态栏正则 HTML 本身改(非 src) | 是 |
